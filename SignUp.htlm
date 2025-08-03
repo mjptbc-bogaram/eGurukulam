@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #add8e6;
+      color: black;
+      padding: 10px 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    header img {
+      width: 120px;
+      height: 120px;
+      border-radius: 100%;
+      margin-bottom: 5px;
+    }
+
+    main {
+      padding: 20px;
+      padding-bottom: 60px;
+    }
+
+    form {
+      display: inline-block;
+      text-align: left;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    select {
+      display: block;
+      margin: 6px 0 12px;
+      padding: 8px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+      color: white;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .section {
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    h3 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    footer {
+      background-color: #add8e6;
+      color: black;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 14px;
+    }
+  </style>
+  <script>
+    function handleSignup(event) {
+      event.preventDefault();
+      const name = document.getElementById('name').value;
+      const gender = document.getElementById('gender').value;
+      const phone = document.getElementById('phone').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const empid = document.getElementById('empid').value;
+      const desig = document.getElementById('desig').value;
+      const empcode = document.getElementById('empcode').value;
+      
+
+
+      const status = document.getElementById('status');
+      if (password !== confirmPassword) {
+        status.innerText = '❌ Passwords do not match.';
+        status.className = 'error';
+        return;
+      }
+      
+
+      google.script.run.withSuccessHandler((response) => {
+        const status = document.getElementById('status');
+        if (response === 'success') {
+          status.innerText = '✅ Account created successfully!';
+          status.className = 'success';
+          // Wait 1.5 seconds, then redirect to Login page
+          setTimeout(() => {
+            google.script.run.withSuccessHandler((html) => {
+              const newWindow = window.open("", "_self");
+              newWindow.document.open();
+              newWindow.document.write(html);
+              newWindow.document.close();
+            }).servePage("Login");  // Make sure 'Login.html' exists
+          }, 1500);
+
+        } else {
+          status.innerText = '❌ ' + response;
+          status.className = 'error';
+        } 
+      }).registerUser(name, gender, phone, username, password, empid, desig, empcode);
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <img src="https://drive.google.com/thumbnail?id=1bntKEw8Kw59Y61OjQFrZka03hA_WFS7q" alt="Society Logo">
+    <h1>MJPTBCWRS (Boys) - BOGARAM</h1>
+  </header>
+  <main>
+    <h2>Sign Up</h2>
+    <form onsubmit="handleSignup(event)">
+      <!-- Account Details -->
+      <div class="section">
+        <h3>Account Details</h3>
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="Full Name" required>
+
+        <label for="gender">Gender</label>
+        <select id="gender" required>
+          <option value="" disabled selected>Select Gender</option>
+          <option value="MALE">MALE</option>
+          <option value="FEMALE">FEMALE</option>          
+        </select>
+
+        <label for="phone">Contact Number</label>
+        <input type="text" id="phone" placeholder="Contact Number" required>
+
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Password" required>
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" placeholder="Re-enter Password" required>
+      </div>
+
+      <!-- Employee Details -->
+      <div class="section">
+        <h3>Employee Details</h3>
+        <label for="empid">Employee ID</label>
+        <input type="text" id="empid" placeholder="Employee ID" required>
+
+        <label for="desig">Designation</label>
+        <select id="desig" required>
+          <option value="" disabled selected>Select Designation</option>
+          <option value="DW">DW</option>
+          <option value="ATP">ATP</option>
+          <option value="TGT">TGT</option>
+          <option value="PGT">PGT</option>
+          <option value="JL">JL</option>
+          <option value="LIBRARIAN">LIBRARIAN</option>
+          <option value="DEO">DEO</option>
+        </select>
+
+        
+        <label for="empcode">Employee Code</label>
+        <input type="text" id="empcode" placeholder="Employee Code" required>
+
+      </div>  
+
+      <button type="submit">Sign Up</button>
+      <p id="status"></p>
+    </form>
+  </main>
+  <footer>
+    <p>&copy; 2024 Panjala Saibaba, TGT-Mathematics | All rights reserved</p>
+  </footer>
+</body>
+</html>
